@@ -1,4 +1,5 @@
 SET DATESTYLE TO PostgreSQL, European;
+
 CREATE DATABASE azure_company
     WITH 
     TEMPLATE = template0 
@@ -7,7 +8,7 @@ CREATE DATABASE azure_company
     LC_CTYPE = 'en_US.utf8';
 
 \c azure_company
-	
+
 CREATE TABLE employee (
 	Fname VARCHAR(15) NOT NULL,
 	Minit CHAR(1),
@@ -25,7 +26,7 @@ CREATE TABLE employee (
 
 ALTER TABLE employee 
 	ADD CONSTRAINT fk_employee 
-	FOREIGN KEY(Super_ssn) REFERENCES employee(Ssn)
+	FOREIGN KEY (Super_ssn) REFERENCES employee(Ssn)
 	ON DELETE SET NULL
 	ON UPDATE CASCADE;
 
@@ -41,26 +42,18 @@ CREATE TABLE department (
 	CONSTRAINT chk_date_dept CHECK (Dept_create_date < Mgr_start_date),
 	CONSTRAINT pk_dept PRIMARY KEY (Dnumber),
 	CONSTRAINT unique_name_dept UNIQUE (Dname),
-	FOREIGN KEY (Mgr_ssn) REFERENCES employee(Ssn)
+	CONSTRAINT fk_mgr FOREIGN KEY (Mgr_ssn) REFERENCES employee(Ssn)  -- Nomeie a constraint para referência futura
+	ON UPDATE CASCADE
 );
-
-ALTER TABLE department 
-	DROP CONSTRAINT fk_dept, 
-	ADD CONSTRAINT fk_dept FOREIGN KEY(Mgr_ssn) REFERENCES employee(Ssn)
-	ON UPDATE CASCADE;
 
 CREATE TABLE dept_locations (
 	Dnumber INT NOT NULL,
 	Dlocation VARCHAR(15) NOT NULL,
 	CONSTRAINT pk_dept_locations PRIMARY KEY (Dnumber, Dlocation),
 	CONSTRAINT fk_dept_locations FOREIGN KEY (Dnumber) REFERENCES department (Dnumber)
-);
-
-ALTER TABLE dept_locations 
-	DROP CONSTRAINT fk_dept_locations, 
-	ADD CONSTRAINT fk_dept_locations FOREIGN KEY (Dnumber) REFERENCES department(Dnumber)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE;
+	ON UPDATE CASCADE;  -- Inclua opções de deletar e atualizar, se necessário
+);
 
 CREATE TABLE project (
 	Pname VARCHAR(15) NOT NULL,
@@ -91,4 +84,3 @@ CREATE TABLE dependent (
 	PRIMARY KEY (Essn, Dependent_name),
 	CONSTRAINT fk_dependent FOREIGN KEY (Essn) REFERENCES employee(Ssn)
 );
-
