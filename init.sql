@@ -52,7 +52,7 @@ CREATE TABLE dept_locations (
 	CONSTRAINT pk_dept_locations PRIMARY KEY (Dnumber, Dlocation),
 	CONSTRAINT fk_dept_locations FOREIGN KEY (Dnumber) REFERENCES department (Dnumber)
 	ON DELETE CASCADE
-	ON UPDATE CASCADE;  -- Inclua opções de deletar e atualizar, se necessário
+	ON UPDATE CASCADE  -- Inclua opções de deletar e atualizar, se necessário
 );
 
 CREATE TABLE project (
